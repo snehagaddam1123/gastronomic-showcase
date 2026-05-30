@@ -28,14 +28,29 @@
   --ease: cubic-bezier(.2,.7,.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+  min-height:100%;
+  height:auto;
+}
 body{
   font-family:var(--font-body);
   color:var(--charcoal);
   background:var(--cream);
   line-height:1.6;
   overflow-x:hidden;
+  overflow-y:auto;
+  min-height:100%;
+  height:auto;
+  -webkit-overflow-scrolling:touch;
 }
+.logo img.wa-logo-img{max-height:60px;width:auto;height:auto;object-fit:contain}
+.trusted-brand-name,.partner-name{
+  font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:.5rem .75rem;
+}
+.trusted-brand-link,.partner-link{display:inline-flex;align-items:center;text-decoration:none}
+.trusted-brand-link:hover,.partner-link:hover{opacity:.85}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
@@ -69,14 +84,44 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
   text-transform:uppercase;
   padding:.55rem 1rem;
   font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.5rem 1.25rem;
 }
-.announce span{margin:0 .6rem}
+.announce-content{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;flex:1;min-width:0}
+.announce-content span{margin:0 .6rem}
+.announce-meta{
+  display:inline-flex;
+  align-items:center;
+  gap:1rem;
+  font-size:.72rem;
+  letter-spacing:.06em;
+  text-transform:none;
+  font-weight:600;
+  flex-shrink:0;
+}
+.announce-meta[hidden]{display:none!important}
+.announce-meta-item{color:inherit;text-decoration:none;opacity:.95}
+.announce-meta-item:hover{text-decoration:underline}
+.announce-social{display:inline-flex;align-items:center;gap:.45rem}
+.announce-social a{color:inherit;opacity:.9;font-size:.85rem}
+.nav-inner.layout-centered{flex-direction:column;align-items:center;gap:.65rem;padding-top:.85rem;padding-bottom:.85rem}
+.nav-inner.layout-centered .logo{margin:0 auto}
+.nav-inner.layout-centered .nav-links{justify-content:center;flex-wrap:wrap}
+.nav-inner.layout-minimal{padding-top:.75rem;padding-bottom:.75rem}
+.nav-inner.layout-minimal .logo{font-size:1.35rem}
+.nav-inner.layout-minimal .nav-links .nav-link:not(.btn-primary){font-size:.88rem}
+.nav--transparent{background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom-color:transparent}
+.nav--transparent.scrolled{background:var(--nav-sticky-bg, rgba(255,248,240,.97))!important}
+.nav--sticky-enabled{position:sticky;top:0;z-index:50}
 
 /* =========================================================
    NAV
    ========================================================= */
 .nav{
-  position:sticky;top:0;z-index:50;
+  position:relative;z-index:50;
   background:rgba(255,248,240,.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -85,13 +130,13 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
 }
 .nav.scrolled{background:rgba(255,248,240,.97);box-shadow:0 6px 20px -10px rgba(0,0,0,.15)}
 .nav-inner{
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;gap:clamp(.75rem,2vw,2rem);
   padding:1.1rem 24px;max-width:var(--container);margin:0 auto;
 }
 .logo{
   font-family:var(--font-display);
   font-size:1.6rem;font-weight:900;
-  display:flex;align-items:center;gap:.55rem;
+  display:flex;align-items:center;gap:.55rem;flex-shrink:0;margin-right:.35rem;
 }
 .logo .dot{width:10px;height:10px;background:var(--crimson);border-radius:50%;display:inline-block}
 .logo em{color:var(--saffron);font-style:normal}
@@ -142,8 +187,9 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
 /* =========================================================
    PAGES
    ========================================================= */
-.page{display:none;animation:fadeUp .6s var(--ease) both}
-.page.active{display:block}
+.page{display:none;animation:fadeUp .6s var(--ease) both;overflow:visible}
+.page.active{display:block;overflow:visible;min-height:0}
+#page-about{overflow:visible}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
 /* =========================================================
@@ -159,11 +205,19 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
   background:url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=80") center/cover no-repeat;
   will-change:transform;
 }
-.hero::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(26,26,26,.45) 0%,rgba(26,26,26,.75) 100%);
+.hero-bg video.hero-bg-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;
 }
-.hero-inner{position:relative;z-index:2;max-width:900px;padding:0 24px}
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(26,26,26,.45) 0%,rgba(26,26,26,.75) 100%);
+  pointer-events:none;
+}
+.hero-shell{
+  position:relative;z-index:2;width:100%;max-width:var(--container);margin:0 auto;
+  padding:0 24px;display:flex;align-items:center;justify-content:center;
+}
+.hero-inner{position:relative;z-index:2;max-width:900px;padding:0;width:100%}
 .hero h1{color:#fff;letter-spacing:-.02em}
 .hero h1 .accent{color:var(--saffron);font-style:italic}
 .hero p.tagline{
@@ -177,6 +231,77 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
   text-transform:uppercase;color:var(--gold);margin-bottom:1.6rem;backdrop-filter:blur(10px);
 }
 .hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.hero-media{
+  flex:0 0 auto;max-width:min(420px,42vw);margin:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-media img{
+  width:100%;max-height:min(520px,55vh);object-fit:contain;
+  border-radius:var(--radius);filter:drop-shadow(0 24px 40px rgba(0,0,0,.35));
+}
+.hero--layout-split .hero-shell{
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;text-align:left;
+}
+.hero--layout-split.hero--media-left .hero-inner{order:2}
+.hero--layout-split.hero--media-left .hero-media{order:1}
+.hero--layout-split.hero--media-right .hero-inner{order:1}
+.hero--layout-split.hero--media-right .hero-media{order:2}
+.hero--layout-split.hero--media-center{
+  display:flex;flex-direction:column;text-align:center;
+}
+.hero--layout-split.hero--media-center .hero-media{max-width:min(560px,80vw);margin-top:2rem}
+.hero--layout-centered .hero-shell,.hero--layout-default .hero-shell{flex-direction:column}
+.hero--layout-centered.hero--media-center .hero-media,
+.hero--layout-default.hero--media-center .hero-media{margin-top:2rem;max-width:min(480px,70vw)}
+.hero--layout-default.hero--media-left .hero-shell,
+.hero--layout-default.hero--media-right .hero-shell{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center;text-align:left;
+}
+.hero--layout-default.hero--media-left .hero-inner{order:2}
+.hero--layout-default.hero--media-left .hero-media{order:1}
+.hero--layout-fullscreen{height:100vh!important;min-height:100vh!important}
+.hero--align-left .hero-inner,.hero--align-left{text-align:left}
+.hero--align-left .hero-cta{justify-content:flex-start}
+.hero--align-right .hero-inner,.hero--align-right{text-align:right}
+.hero--align-right .hero-cta{justify-content:flex-end}
+.hero--align-center .hero-inner,.hero--align-center{text-align:center}
+.hero--align-center .hero-cta{justify-content:center}
+.hero-carousel-ui{
+  position:absolute;inset:0;z-index:10;pointer-events:none;
+}
+.hero-carousel-ui[hidden]{display:none!important}
+.hero-carousel-arrow{
+  pointer-events:auto;position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.35);
+  background:rgba(26,26,26,.45);color:#fff;font-size:1.6rem;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s, transform .2s;
+}
+.hero-carousel-arrow:hover{background:rgba(192,57,43,.85);transform:translateY(-50%) scale(1.05)}
+.hero-carousel-arrow--prev{left:18px}
+.hero-carousel-arrow--next{right:18px}
+.hero-carousel-dots{
+  pointer-events:auto;position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;gap:.5rem;align-items:center;
+}
+.hero-carousel-dot{
+  width:9px;height:9px;border-radius:50%;border:0;padding:0;
+  background:rgba(255,255,255,.45);cursor:pointer;transition:transform .2s, background .2s;
+}
+.hero-carousel-dot.is-active{background:var(--gold);transform:scale(1.2)}
+.hero--fade .hero-bg{transition:opacity .6s ease}
+.hero--fade .hero-bg.is-fading{opacity:.15}
+@media(max-width:900px){
+  .hero--layout-split .hero-shell,
+  .hero--layout-default.hero--media-left .hero-shell,
+  .hero--layout-default.hero--media-right .hero-shell{
+    grid-template-columns:1fr;text-align:center;
+  }
+  .hero--layout-split .hero-inner,.hero--layout-split .hero-media,
+  .hero--layout-default.hero--media-left .hero-inner,
+  .hero--layout-default.hero--media-left .hero-media{order:unset}
+  .hero-media{max-width:min(360px,88vw);margin:2rem auto 0}
+}
 
 .scroll-indicator{
   position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
@@ -189,13 +314,115 @@ h3{font-size:clamp(1.3rem,2vw,1.7rem)}
 .feature-strip{
   background:var(--charcoal);color:var(--cream);padding:2.4rem 0;
 }
+.feature-strip-head{text-align:center;margin-bottom:1.75rem}
+.feature-strip-head h3{color:var(--saffron);font-size:clamp(1.2rem,2.5vw,1.6rem);margin-bottom:.35rem}
+.feature-strip-head p{color:rgba(255,248,240,.7);font-size:.92rem}
 .feature-strip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.feature-strip-grid--cols-3{grid-template-columns:repeat(3,1fr)}
+.feature-strip-grid--cols-2{grid-template-columns:repeat(2,1fr)}
+.partners-block{padding:0 0 2.5rem;background:var(--charcoal)}
+.partners-block[hidden]{display:none!important}
+.partners-block .container{text-align:center}
+.partners-block h4{color:var(--saffron);font-size:1rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem}
+.partners-block p{color:rgba(255,248,240,.65);margin-bottom:1.25rem;font-size:.9rem}
+.partners-logos{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;align-items:center}
+.partners-logos img{max-height:36px;max-width:120px;object-fit:contain;opacity:.75}
+.about-team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+@media(max-width:900px){.about-team-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.about-team-grid{grid-template-columns:1fr}}
+.about-team-card{background:#fff;border-radius:var(--radius);padding:1.25rem;text-align:center;box-shadow:var(--shadow-md)}
+.about-team-card img{width:88px;height:88px;border-radius:50%;object-fit:cover;margin:0 auto .75rem;display:block}
+.about-team-card h4{font-size:1rem;margin-bottom:.25rem}
+.about-team-card p{font-size:.85rem;color:var(--muted)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.portfolio-grid .portfolio-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
+.portfolio-grid .portfolio-card img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.portfolio-grid .portfolio-card .body{padding:1rem}
+.feature-items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem}
+.feature-items-grid .feature-card{background:#fff;border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-md)}
+.menu-pricing{margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,248,240,.12)}
+.menu-pricing[hidden]{display:none!important}
+.pricing-plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:1.5rem}
+.pricing-plans-grid .plan-card{background:rgba(255,248,240,.06);border:1px solid rgba(255,248,240,.12);border-radius:var(--radius);padding:1.5rem;text-align:center;position:relative;display:flex;flex-direction:column;gap:.75rem}
+.pricing-plans-grid .plan-card.popular{border-color:var(--saffron);box-shadow:0 0 0 2px rgba(192,57,43,.25)}
+.pricing-plans-grid .plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--saffron);color:#fff;font-size:.72rem;font-weight:700;padding:.25rem .75rem;border-radius:999px}
+.pricing-plans-grid .plan-card h4{color:var(--saffron);margin-bottom:.25rem}
+.pricing-plans-grid .plan-price{font-size:1.5rem;font-weight:700;color:var(--gold);margin:.25rem 0}
+.pricing-plans-grid .plan-features{list-style:none;text-align:left;margin:.5rem 0 0;padding:0;display:grid;gap:.45rem}
+.pricing-plans-grid .plan-features li{font-size:.88rem;color:rgba(255,248,240,.85);padding-left:1.1rem;position:relative}
+.pricing-plans-grid .plan-features li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+.pricing-plans-grid .plan-features li.excluded{opacity:.45;text-decoration:line-through}
+.pricing-plans-grid .plan-features li.excluded::before{content:"—";color:rgba(255,248,240,.5)}
+.wa-pricing-toggle{display:flex;justify-content:center;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+.wa-pricing-toggle button{border:1px solid rgba(255,248,240,.25);background:transparent;color:inherit;padding:.45rem 1rem;border-radius:999px;cursor:pointer;font-size:.88rem}
+.wa-pricing-toggle button.active{background:var(--saffron);border-color:var(--saffron);color:#fff}
+#wa-process-block[hidden]{display:none!important}
+.process-steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:1.5rem}
+@media(max-width:900px){.process-steps-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.process-steps-grid{grid-template-columns:1fr}}
+.process-step-card{background:#fff;border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow-md);text-align:center}
+.process-step-card .step-num{display:inline-flex;align-items:center;justify-content:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--crimson);color:#fff;font-weight:700;margin-bottom:.6rem}
+.feature-items-grid .feature-card .feat-icon{font-size:1.6rem;color:var(--saffron);margin-bottom:.5rem}
+#wa-portfolio-block[hidden],#wa-features-block[hidden],#wa-menu-features-block[hidden]{display:none!important}
 .feature-strip h4{color:var(--saffron);font-size:2rem;margin-bottom:.3rem}
 .feature-strip p{font-size:.78rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,248,240,.7)}
+.feature-strip--animated .feature-strip-grid > div h4{
+  animation:statPulse 2.4s ease-in-out infinite;
+}
+@keyframes statPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
 @media(max-width:780px){.feature-strip-grid{grid-template-columns:repeat(2,1fr);gap:2rem}}
+
+.trusted-brands{padding:2.5rem 0;background:var(--cream)}
+.trusted-brands[hidden]{display:none!important}
+.trusted-brands-head{text-align:center;margin-bottom:1.5rem}
+.trusted-brands-head h3{font-size:clamp(1.2rem,2.5vw,1.6rem);margin-bottom:.35rem}
+.trusted-brands-head p{color:var(--muted);font-size:.92rem}
+.trusted-brands-logos{
+  display:flex;flex-wrap:wrap;gap:1.75rem;justify-content:center;align-items:center;
+}
+.trusted-brands-logos img{
+  max-height:44px;max-width:130px;object-fit:contain;opacity:.88;
+  transition:opacity .25s, filter .25s, transform .25s;
+}
+.trusted-brands-logos a:hover img{opacity:1;transform:translateY(-2px)}
+.trusted-brands-logos--grey img{filter:grayscale(1);opacity:.72}
+.trusted-brands-logos--marquee{
+  flex-wrap:nowrap;overflow:hidden;justify-content:flex-start;
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.trusted-brands-logos--marquee .trusted-marquee-track{
+  display:flex;gap:2.5rem;align-items:center;animation:trustedMarquee 28s linear infinite;
+}
+@keyframes trustedMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* Section intros */
 section.block{padding:6rem 0}
+.wa-content-legal-host{margin-top:3rem;padding-top:2.5rem;border-top:1px solid rgba(0,0,0,.08)}
+.wa-content-block{margin-bottom:2.5rem}
+.wa-content-block__title{margin:.4rem 0 1rem;font-family:var(--font-display)}
+.wa-content-block__lead{color:var(--muted);margin-bottom:1.2rem;max-width:640px}
+.wa-blog-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.wa-blog-card{background:#fff;padding:1.2rem 1.4rem;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.wa-blog-meta{font-size:.85rem;color:var(--muted);margin:.25rem 0 .6rem}
+.wa-blog-excerpt{color:var(--muted);line-height:1.6}
+.wa-faq-list{display:grid;gap:.6rem}
+.wa-faq-item{background:#fff;padding:.9rem 1.1rem;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.wa-faq-item summary{font-weight:700;cursor:pointer}
+.wa-faq-item p{margin-top:.6rem;color:var(--muted);line-height:1.6}
+.wa-legal-body{color:var(--muted);line-height:1.7;margin-bottom:1rem}
+.wa-legal-sub{margin:1.2rem 0 .4rem}
+.wa-cms-tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.wa-cms-tab{border:1px solid rgba(0,0,0,.12);background:#fff;padding:.55rem 1rem;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem}
+.wa-cms-tab.active{background:var(--crimson);color:#fff;border-color:var(--crimson)}
+.wa-cms-tab-panels .wa-cms-tab-panel{display:none;background:#fff;padding:1.2rem 1.4rem;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.wa-cms-tab-panels .wa-cms-tab-panel.active{display:block}
+.wa-custom-sec{margin-bottom:2rem}
+.wa-custom-sec h3{margin-bottom:.6rem;font-family:var(--font-display)}
+.wa-custom-sec-img{margin-top:1rem;border-radius:var(--radius);overflow:hidden}
+.wa-custom-sec-img img{width:100%;max-height:320px;object-fit:cover;display:block}
 .section-head{text-align:center;max-width:680px;margin:0 auto 3.5rem}
 .section-head p{color:var(--muted);margin-top:.8rem}
 
@@ -560,17 +787,24 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
 </head>
 <body>
 
-<!-- Announcement bar -->
-<div class="announce">
-  <span>✦ Tasting menu Fridays</span>
-  <span>•</span>
-  <span>Live music every Saturday night</span>
-  <span>•</span>
-  <span>Now booking the holiday season</span>
+<!-- Announcement bar (CMS: template-bridge applyTopBar) -->
+<div class="announce" id="topBar">
+  <div class="announce-content" id="announceContent">
+    <span>✦ Tasting menu Fridays</span>
+    <span>•</span>
+    <span>Live music every Saturday night</span>
+    <span>•</span>
+    <span>Now booking the holiday season</span>
+  </div>
+  <div class="announce-meta" id="announceMeta" hidden>
+    <a id="announceEmail" class="announce-meta-item" href="#" hidden></a>
+    <a id="announcePhone" class="announce-meta-item" href="#" hidden></a>
+    <span id="announceSocial" class="announce-social" hidden></span>
+  </div>
 </div>
 
 <!-- Nav -->
-<header class="nav" id="nav">
+<header class="nav nav--sticky-enabled" id="nav">
   <div class="nav-inner">
     <a href="#" class="logo" data-page="home"><span class="dot"></span>Saffron <em>&amp;</em> Smoke</a>
     <nav class="nav-links" id="navLinks">
@@ -591,24 +825,36 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
 
 <!-- ========================== HOME ========================== -->
 <section class="page active" id="page-home">
-  <div class="hero">
+  <div class="hero" id="hero">
     <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-inner">
-      <span class="badge">★ ★ ★ ★ ★ &nbsp; Est. 2014</span>
-      <h1>Where Every Bite<br><span class="accent">Tells a Story</span></h1>
-      <p class="tagline">A vibrant culinary journey blending old-world soul with modern fire — crafted by hand, served with heart.</p>
-      <div class="hero-cta">
-        <a href="#" class="btn btn-primary" data-page="reservations">Reserve a Table</a>
-        <a href="#" class="btn btn-gold" data-page="menu">Explore the Menu</a>
+    <div class="hero-overlay" id="heroOverlay"></div>
+    <div class="hero-shell" id="heroShell">
+      <div class="hero-inner" id="heroInner">
+        <span class="badge" id="heroBadge">★ ★ ★ ★ ★ &nbsp; Est. 2014</span>
+        <h1 id="heroTitle">Where Every Bite<br><span class="accent">Tells a Story</span></h1>
+        <p class="tagline" id="heroDescription">A vibrant culinary journey blending old-world soul with modern fire — crafted by hand, served with heart.</p>
+        <div class="hero-cta">
+          <a href="#" class="btn btn-primary" data-page="reservations">Reserve a Table</a>
+          <a href="#" class="btn btn-gold" data-page="menu">Explore the Menu</a>
+        </div>
       </div>
+      <figure class="hero-media" id="heroMedia" hidden>
+        <img id="heroMediaImg" alt="" />
+      </figure>
     </div>
-    <div class="scroll-indicator">Scroll ↓</div>
+    <div class="hero-carousel-ui" id="heroCarouselUi" hidden>
+      <button type="button" class="hero-carousel-arrow hero-carousel-arrow--prev" id="heroCarouselPrev" aria-label="Previous slide">&#8249;</button>
+      <button type="button" class="hero-carousel-arrow hero-carousel-arrow--next" id="heroCarouselNext" aria-label="Next slide">&#8250;</button>
+      <div class="hero-carousel-dots" id="heroCarouselDots"></div>
+    </div>
+    <div class="scroll-indicator">Scroll &#8595;</div>
   </div>
 
   <!-- Stats strip -->
-  <div class="feature-strip">
+  <div class="feature-strip" id="wa-stats-strip">
     <div class="container">
-      <div class="feature-strip-grid">
+      <div class="feature-strip-head" id="wa-stats-head"></div>
+      <div class="feature-strip-grid" id="wa-stats-grid">
         <div class="reveal"><h4>10+</h4><p>Years of Flavor</p></div>
         <div class="reveal delay-1"><h4>48</h4><p>Signature Dishes</p></div>
         <div class="reveal delay-2"><h4>3★</h4><p>Michelin Recognized</p></div>
@@ -617,14 +863,31 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
     </div>
   </div>
 
-  <section class="block">
+  <!-- Partners (CMS: template-bridge applyPartners) -->
+  <section class="partners-block" id="wa-partners-block" hidden>
     <div class="container">
-      <div class="section-head reveal">
+      <h4 id="wa-partners-title"></h4>
+      <p id="wa-partners-subtitle"></p>
+      <div class="partners-logos" id="wa-partners-logos"></div>
+    </div>
+  </section>
+
+  <!-- Trusted brands (CMS: template-bridge applyTrustedBrands) -->
+  <section class="trusted-brands" id="wa-trusted-brands" hidden>
+    <div class="container">
+      <div class="trusted-brands-head" id="wa-trusted-head"></div>
+      <div class="trusted-brands-logos" id="wa-trusted-logos"></div>
+    </div>
+  </section>
+
+  <section class="block" id="wa-dish-block">
+    <div class="container">
+      <div class="section-head reveal" id="wa-dish-head">
         <span class="eyebrow">Chef's Selection</span>
         <h2>Tonight's Highlights</h2>
         <p>Bold, seasonal plates pulled from our open-fire kitchen.</p>
       </div>
-      <div class="dish-grid">
+      <div class="dish-grid" id="wa-dish-grid">
         <article class="dish-card reveal">
           <div class="img"><span class="dish-tag">Signature</span><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=900&q=80" alt="Saffron Risotto"></div>
           <div class="body">
@@ -650,6 +913,20 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
     </div>
   </section>
 
+  <section class="block" id="wa-portfolio-block" hidden>
+    <div class="container">
+      <div class="section-head reveal" id="wa-portfolio-head"></div>
+      <div class="portfolio-grid" id="wa-portfolio-grid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="wa-features-block" hidden>
+    <div class="container">
+      <div class="section-head reveal" id="wa-features-head"></div>
+      <div class="feature-items-grid" id="wa-features-grid"></div>
+    </div>
+  </section>
+
   <div class="cta-strip">
     <div class="container">
       <h2>Reserve Your Evening</h2>
@@ -661,13 +938,20 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
 
 <!-- ========================== MENU ========================== -->
 <section class="page" id="page-menu">
-  <div class="menu-hero">
+  <div class="menu-hero" id="wa-menu-hero">
     <div>
-      <p>Crafted Daily</p>
-      <h1>The Menu</h1>
+      <p id="wa-menu-eyebrow">Crafted Daily</p>
+      <h1 id="wa-menu-title">The Menu</h1>
     </div>
   </div>
-  <div class="container">
+  <section class="block" id="wa-menu-features-block" hidden>
+    <div class="container">
+      <div class="section-head reveal" id="wa-menu-features-head"></div>
+      <div class="feature-items-grid" id="wa-menu-features-grid"></div>
+    </div>
+  </section>
+
+  <div class="container" id="wa-menu-container">
     <div class="menu-tabs" id="menuTabs">
       <button class="menu-tab active" data-cat="starters">Starters</button>
       <button class="menu-tab" data-cat="mains">Mains</button>
@@ -716,6 +1000,18 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
       </div>
     </div>
   </div>
+
+  <section class="block" id="wa-process-block" hidden>
+    <div class="container">
+      <div class="section-head reveal" id="wa-process-head"></div>
+      <div class="process-steps-grid" id="wa-process-grid"></div>
+    </div>
+  </section>
+
+    <section class="menu-pricing" id="wa-menu-pricing" hidden>
+      <div class="section-head reveal" id="wa-pricing-head"></div>
+      <div class="pricing-plans-grid" id="wa-pricing-grid"></div>
+    </section>
   <div style="height:6rem"></div>
 </section>
 
@@ -747,13 +1043,23 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
     </div>
   </section>
 
-  <section class="block" style="background:#f7ead6">
+  <section class="block" id="wa-about-team-block">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head reveal" id="wa-team-head">
+        <span class="eyebrow">Our team</span>
+        <h2>Meet the team</h2>
+      </div>
+      <div class="about-team-grid" id="wa-team-grid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="wa-milestones-block" style="background:#f7ead6">
+    <div class="container">
+      <div class="section-head reveal" id="wa-milestones-head">
         <span class="eyebrow">The Journey</span>
         <h2>Milestones</h2>
       </div>
-      <div class="timeline">
+      <div class="timeline" id="wa-milestones-timeline">
         <div class="tl-item left reveal"><div class="tl-card"><h4>The First Door</h4><p>A 24-seat room opens on a quiet corner. The wood oven roars to life.</p></div><div class="tl-dot"></div><div class="tl-year">2014</div></div>
         <div class="tl-item right reveal"><div class="tl-year">2017</div><div class="tl-dot"></div><div class="tl-card"><h4>First Star</h4><p>Recognized by the city's leading critics for our seasonal tasting menu.</p></div></div>
         <div class="tl-item left reveal"><div class="tl-card"><h4>Garden to Table</h4><p>We launch our rooftop herb &amp; vegetable garden — three floors above the dining room.</p></div><div class="tl-dot"></div><div class="tl-year">2019</div></div>
@@ -774,12 +1080,13 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
   <div class="menu-hero" style="background:none">
     <div style="background:linear-gradient(rgba(26,26,26,.55),rgba(26,26,26,.55)),url('https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=2000&q=80') center/cover;position:absolute;inset:0"></div>
     <div>
-      <p>Captured Moments</p>
-      <h1>The Gallery</h1>
+      <p id="wa-gallery-eyebrow">Captured Moments</p>
+      <h1 id="wa-gallery-title">The Gallery</h1>
     </div>
   </div>
   <section class="block">
     <div class="container">
+      <div class="section-head reveal" id="wa-gallery-head"></div>
       <div class="masonry" id="masonry">
         <div class="item"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80" alt=""></div>
         <div class="item"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" alt=""></div>
@@ -860,12 +1167,12 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
   <div class="menu-hero" style="background:none">
     <div style="background:linear-gradient(rgba(26,26,26,.55),rgba(26,26,26,.75)),url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=80') center/cover;position:absolute;inset:0"></div>
     <div>
-      <p>Guest Voices</p>
-      <h1>What People Say</h1>
+      <p id="wa-testimonials-eyebrow">Guest Voices</p>
+      <h1 id="wa-testimonials-title">What People Say</h1>
     </div>
   </div>
 
-  <section class="block testi-section">
+  <section class="block testi-section" id="wa-testimonials-block">
     <div class="container">
       <div class="carousel" id="carousel">
         <div class="track" id="track">
@@ -880,6 +1187,13 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
         <button class="car-arrow next" id="next">›</button>
       </div>
       <div class="car-controls" id="dots"></div>
+    </div>
+  </section>
+
+  <section class="block" id="wa-awards-block" hidden style="background:var(--cream)">
+    <div class="container">
+      <div class="section-head reveal" id="wa-awards-head"></div>
+      <div class="trusted-brands-logos" id="wa-awards-grid" style="justify-content:center"></div>
     </div>
   </section>
 </section>
@@ -931,6 +1245,7 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
           </form>
         </div>
       </div>
+      <div id="wa-content-legal-host" class="wa-content-legal-host" hidden></div>
     </div>
   </section>
 </section>
@@ -963,7 +1278,7 @@ footer .tag{color:rgba(255,248,240,.65);font-size:.92rem;line-height:1.7;max-wid
       </div>
       <div>
         <h5>Follow</h5>
-        <div class="socials"><a href="#">Ig</a><a href="#">Fb</a><a href="#">Tk</a><a href="#">X</a></div>
+        <div class="socials" id="wa-footer-socials"><a href="#">Ig</a><a href="#">Fb</a><a href="#">Tk</a><a href="#">X</a></div>
       </div>
     </div>
     <div class="foot-bot">
@@ -991,6 +1306,7 @@ function go(page){
   // re-trigger reveals for the new page
   setTimeout(initReveals, 50);
 }
+window.__previewGo = go;
 document.addEventListener("click", (e) => {
   const t = e.target.closest("[data-page]");
   if(t){ e.preventDefault(); go(t.dataset.page); }
@@ -1032,12 +1348,14 @@ function initReveals(){
   els.forEach(el => { el.classList.remove("in"); io.observe(el); });
 }
 initReveals();
+window.__waInitReveals = initReveals;
 
 /* =========================================================
    MENU TABS
    ========================================================= */
-document.getElementById("menuTabs").addEventListener("click", (e) => {
-  const b = e.target.closest(".menu-tab"); if(!b) return;
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("#menuTabs .menu-tab");
+  if(!b) return;
   document.querySelectorAll(".menu-tab").forEach(t => t.classList.toggle("active", t === b));
   document.querySelectorAll(".menu-category").forEach(c => c.classList.toggle("active", c.dataset.cat === b.dataset.cat));
 });
@@ -1092,30 +1410,39 @@ qf.addEventListener("submit", (e) => {
 });
 
 /* =========================================================
-   TESTIMONIAL CAROUSEL
+   TESTIMONIAL CAROUSEL (skipped in Website Admin live preview — template-bridge.js owns it)
    ========================================================= */
-const track = document.getElementById("track");
-const slides = track.children;
-const dotsEl = document.getElementById("dots");
-let idx = 0, autoplay;
-for(let i = 0; i < slides.length; i++){
-  const d = document.createElement("span");
-  d.className = "dot" + (i===0 ? " active" : "");
-  d.addEventListener("click", () => goSlide(i));
-  dotsEl.appendChild(d);
-}
-function goSlide(i){
-  idx = (i + slides.length) % slides.length;
-  track.style.transform = `translateX(-${idx*100}%)`;
-  dotsEl.querySelectorAll(".dot").forEach((d,k) => d.classList.toggle("active", k===idx));
-}
-document.getElementById("next").addEventListener("click", () => goSlide(idx+1));
-document.getElementById("prev").addEventListener("click", () => goSlide(idx-1));
-function startAuto(){ autoplay = setInterval(() => goSlide(idx+1), 5000); }
-function stopAuto(){ clearInterval(autoplay); }
-startAuto();
-document.getElementById("carousel").addEventListener("mouseenter", stopAuto);
-document.getElementById("carousel").addEventListener("mouseleave", startAuto);
+(function bootTestimonialCarousel(){
+  if (new URLSearchParams(window.location.search).get("wa_preview") === "1") return;
+  const track = document.getElementById("track");
+  const dotsEl = document.getElementById("dots");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  const carouselEl = document.getElementById("carousel");
+  if (!track || !dotsEl || !prevBtn || !nextBtn || !carouselEl || track.dataset.bridgeManaged) return;
+  const slides = track.children;
+  if (!slides.length) return;
+  let idx = 0, autoplay;
+  for (let i = 0; i < slides.length; i++) {
+    const d = document.createElement("span");
+    d.className = "dot" + (i === 0 ? " active" : "");
+    d.addEventListener("click", () => goSlide(i));
+    dotsEl.appendChild(d);
+  }
+  function goSlide(i) {
+    idx = (i + slides.length) % slides.length;
+    track.style.transform = "translateX(-" + idx * 100 + "%)";
+    dotsEl.querySelectorAll(".dot").forEach((d, k) => d.classList.toggle("active", k === idx));
+  }
+  nextBtn.addEventListener("click", () => goSlide(idx + 1));
+  prevBtn.addEventListener("click", () => goSlide(idx - 1));
+  function startAuto() { autoplay = window.setInterval(() => goSlide(idx + 1), 5000); }
+  function stopAuto() { window.clearInterval(autoplay); }
+  startAuto();
+  carouselEl.addEventListener("mouseenter", stopAuto);
+  carouselEl.addEventListener("mouseleave", startAuto);
+})();
 </script>
+<script src="./template-bridge.js"></script>
 </body>
 </html>
